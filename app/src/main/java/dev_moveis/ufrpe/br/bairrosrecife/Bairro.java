@@ -1,6 +1,8 @@
 package dev_moveis.ufrpe.br.bairrosrecife;
 
-public class Bairro {
+import java.io.Serializable;
+
+public class Bairro implements Serializable {
     private String linkWikiBairro;
     private String nomeBairro;
 

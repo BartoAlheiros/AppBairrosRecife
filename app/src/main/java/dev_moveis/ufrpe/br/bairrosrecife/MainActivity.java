@@ -10,13 +10,21 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView listview;
+    public ListView listview;
+    public static final String EXTRA_LINK = "com.link_teste";
+    private ArrayList<Bairro> bairros;
+    String link = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        bairros = new ArrayList<Bairro>();
         Bairro macaxeira = new Bairro("https://pt.wikipedia.org/wiki/Macaxeira_(Recife)","Macaxeira");
         Bairro imbiribeira = new Bairro("https://pt.wikipedia.org/wiki/Imbiribeira","Imbiribeira");
         Bairro ibura = new Bairro("https://pt.wikipedia.org/wiki/Ibura","Ibura");
@@ -36,6 +44,25 @@ public class MainActivity extends AppCompatActivity {
         Bairro capibaribe = new Bairro("https://pt.wikipedia.org/wiki/Rio_Capibaribe","Capibaribe");
         Bairro sertao = new Bairro("http://bit.ly/2ZOMO5E","Sertão");
 
+        bairros.add(macaxeira);
+        bairros.add(imbiribeira);
+        bairros.add(ibura);
+        bairros.add(ipsep);
+        bairros.add(torreao);
+        bairros.add(casaAmarela);
+        bairros.add(boaViagem);
+        bairros.add(jenipapo);
+        bairros.add(santoAmaro);
+        bairros.add(madalena);
+        bairros.add(boaVista);
+        bairros.add(doisIrmaos);
+        bairros.add(caisDoPorto);
+        bairros.add(caxangah);
+        bairros.add(brasilite);
+        bairros.add(cdu);
+        bairros.add(capibaribe);
+        bairros.add(sertao);
+
         String array[] = new String [] {macaxeira.getNome(),imbiribeira.getNome(),ibura.getNome(),ipsep.getNome(),torreao.getNome(),casaAmarela.getNome(),boaViagem.getNome(),
                 jenipapo.getNome(),santoAmaro.getNome(),madalena.getNome(),boaVista.getNome(),doisIrmaos.getNome(),caisDoPorto.getNome(),caxangah.getNome(),brasilite.getNome(),
                 cdu.getNome(),capibaribe.getNome(),sertao.getNome()};
@@ -43,19 +70,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listview = findViewById(R.id.listview);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,array);
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,array);
         listview.setAdapter(arrayAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-               verBairro();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String nomeBairro = parent.getItemAtPosition(position).toString();
+                verBairro(nomeBairro);
+                //verBairro(onItemClickListener.getClass().);
             }
         });
     }
 
-    private void verBairro() {
-        Intent intent = new Intent(this, ActivityVerBairro.class);
+    private void verBairro(String nome) {
+        Toast toast = Toast.makeText(this,nome,Toast.LENGTH_LONG);
+        toast.show();
+        link = linkBairro(nome);
+
+        Intent intent = new Intent(getApplicationContext(), ActivityVerBairro.class);
+        intent.putExtra(EXTRA_LINK,link);
         startActivity(intent);
+    }
+
+    private String linkBairro(String nomeBairro) {
+        String resultado = "";
+        for (Bairro bairro: bairros) {
+            if(bairro.getNome().equals(nomeBairro)) {
+                resultado = bairro.getLinkBairro();
+            }
+        }
+        return resultado;
     }
 }
